@@ -42,6 +42,14 @@ for char in data:
     else:
         single_char_counts[char] = 1
 
+# lines of code
+lines_of_code = data.count("\n")
+print(f'lines of code: {lines_of_code}')
+
+# average lines of code per file
+average_lines_of_code = lines_of_code / len(paths)
+print(f'average lines of code per file: {round(average_lines_of_code)}')
+
 # average line length
 lines = data.split("\n")
 average_line_length = sum(len(line.encode('utf-8')) for line in lines) / len(lines)
