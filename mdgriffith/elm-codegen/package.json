@@ -1,0 +1,69 @@
+{
+  "name": "elm-codegen",
+  "version": "0.6.1",
+  "description": "Codegen for Elm",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "bin": {
+    "elm-codegen": "./bin/elm-codegen"
+  },
+  "scripts": {
+    "test": "npm run test:install && elm make --docs=docs.json && elm-test && elm-review",
+    "test:elm": "elm-test",
+    "test:install": "npm run build; cd tests; node ../bin/elm-codegen install",
+    "test:pkg-generation": "npm run build; cd tests/package-tests; ts-node run.ts",
+    "build": "tsc && npm run pkg:build",
+    "watch": "tsc --watch",
+    "prepublishOnly": "npm run build",
+    "codegen": "npm run build; node bin/elm-codegen",
+    "build:docs": "elm make --docs=docs.json",
+    "pkg:build": "cd cli/gen-package; elm make src/Generate.elm --optimize --output=../../dist/gen-package.js",
+    "pkg:build-debug": "cd cli/gen-package; elm make src/Generate.elm --output=../../dist/gen-package.js",
+    "pkg:generate-codegen-bindings": "npm run build ; npm run build:docs ; cd cli/gen-package ; ../../bin/elm-codegen install",
+    "pkg:test-install": "node bin/elm-codegen src/Generate.elm --output engine --cwd cli/gen-package --debug --flags-from playground/docs/gql-docs.json",
+    "pkg:install-elm-json": "(npm run build; node bin/elm-codegen install elm/json)",
+    "pkg:install-elm-core": "(npm run build; node bin/elm-codegen install elm/core)",
+    "pkg:install-local-file": "(npm run build; cd cli/gen-package ; ../../bin/elm-codegen install test-package-from-file/Test.elm)",
+    "play-init": "(npm run build; mkdir play; cd play; node ../bin/elm-codegen init)",
+    "play-run": "(npm run build; cd play; node ../bin/elm-codegen run)",
+    "play-run:debug": "(npm run build; cd play; node ../bin/elm-codegen run --debug)",
+    "play:install": "(npm run build; cd play; node ../bin/elm-codegen install)",
+    "play:install-codec": "(npm run build; cd play; node ../bin/elm-codegen install miniBill/elm-codec)",
+    "play:install-ui": "(npm run build; cd play; node ../bin/elm-codegen install mdgriffith/elm-ui)",
+    "play:install-list": "(npm run build; cd play; node ../bin/elm-codegen install elm-community/list-extra)",
+    "play:install-css": "(npm run build; cd play; node ../bin/elm-codegen install rtfeldman/elm-css)",
+    "play:install-browser": "(npm run build; cd play; node ../bin/elm-codegen install elm/browser)",
+    "play-watch": "(npm run build; cd play; node ../bin/elm-codegen run --debug --watch)",
+    "test:init": "(npm run build; bash scripts/test-init.sh)",
+    "review": "elm-review"
+  },
+  "files": [
+    "dist",
+    "bin"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mdgriffith/elm-codegen.git"
+  },
+  "author": "Matthew Griffith",
+  "license": "BSD-3-Clause",
+  "bugs": {
+    "url": "https://github.com/mdgriffith/elm-codegen/issues"
+  },
+  "homepage": "https://github.com/mdgriffith/elm-codegen#readme",
+  "devDependencies": {
+    "@types/node": "^15.0.3",
+    "@types/node-fetch": "^2.5.10",
+    "elm": "^0.19.1-5",
+    "elm-review": "^2.7.5",
+    "elm-test": "^0.19.1-revision9",
+    "ts-node": "^10.9.1",
+    "typescript": "^4.2.4"
+  },
+  "dependencies": {
+    "chalk": "^4.1.1",
+    "chokidar": "^3.5.1",
+    "commander": "^8.3.0",
+    "node-elm-compiler": "^5.0.6"
+  }
+}
