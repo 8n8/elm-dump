@@ -1,0 +1,10 @@
+E0023: Trying to access a missing tuple element
+
+The tuple doesn't contain the field `third`.
+
+Note: Tuple fields are named `el0`, `el1` etc.
+
+main.cara:2:19
+━━┓
+2 ┃ IO.println!(tuple.third)
+  ┃                   ^

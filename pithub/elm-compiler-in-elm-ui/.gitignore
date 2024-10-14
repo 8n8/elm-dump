@@ -1,0 +1,5 @@
+dist/index.js
+elm-stuff/
+elm-watch.json
+node_modules/
+work-in-progress/

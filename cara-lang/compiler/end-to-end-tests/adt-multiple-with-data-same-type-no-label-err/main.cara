@@ -1,0 +1,7 @@
+type Foo =
+  | Bar(Int)
+  | Baz(String,String)
+
+x = Baz("Hello", "World")
+
+IO.println!(x)

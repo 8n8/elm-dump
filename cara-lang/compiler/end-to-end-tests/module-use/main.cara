@@ -1,0 +1,25 @@
+module Foo {
+  x = 1
+  module Bar {
+    y = 2
+  }
+}
+
+x = 500
+
+z = IO {
+  use Foo
+  IO.println!(x)
+  IO.println!(Bar.y)
+}
+
+IO.println!("Gonna do things inside a block, these shouldn't leak")
+
+z!
+
+IO.println!(x)
+
+use Foo
+
+IO.println!(x)
+IO.println!(Bar.y)

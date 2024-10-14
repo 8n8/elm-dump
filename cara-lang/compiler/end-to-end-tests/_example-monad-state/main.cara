@@ -1,0 +1,60 @@
+//////////////////////
+// State definition //
+
+module IdGen {
+
+  opaque type IdGen[a] = IdGen(Int -> (a,Int))
+
+  pure : a -> IdGen[a]
+  pure(a) = IdGen(\id -> (a,id))
+
+  bind : (a -> IdGen[b]) -> IdGen[a] -> IdGen[b]
+  bind(fn,IdGen(runA)) =
+    IdGen(\id -> {
+      (a,idA) = runA(id)
+      IdGen(runB) = fn(a)
+      runB(idA)
+    })
+
+  get : IdGen[Int]
+  get = IdGen(\id -> (id,id))
+
+  inc : IdGen[()]
+  inc = IdGen(\id -> ((),id+1))
+
+  run : IdGen[a] -> Int -> (a,Int)
+  run(IdGen(run), startId) = run(startId)
+
+}
+
+///////////////////
+// IdGen example //
+
+getAndInc : IdGen[Int]
+getAndInc = IdGen {
+  id = get!
+  inc!
+  id
+}
+
+idGenExample : IdGen[String]
+idGenExample = IdGen {
+  i1 = getAndInc!
+  i2 = getAndInc!
+  i3 = getAndInc!
+  i4 = getAndInc!
+  i5 = getAndInc!
+  [i1,i2,i3,i4,i5]
+    |> String.join(",")
+}
+
+idGenExampleRan1 : (String, Int)
+idGenExampleRan1 =
+  IdGen.run(idGenExample, 0)
+
+idGenExampleRan2 : (String, Int)
+idGenExampleRan2 =
+  IdGen.run(idGenExample, 3)
+
+IO.println!(idGenExampleRan1)
+IO.println!(idGenExampleRan2)

@@ -1,0 +1,9 @@
+.DS_Store
+/_build/
+cara-parser.js
+/node_modules/
+/yarn.lock
+/.vscode/
+elm-stuff/
+/index.html
+/dist/

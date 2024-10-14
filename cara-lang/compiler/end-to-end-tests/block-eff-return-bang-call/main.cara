@@ -1,0 +1,10 @@
+const = IO {
+  1
+}
+
+foo = IO {
+  x = const!
+  IO.println!(x)
+}
+
+foo!

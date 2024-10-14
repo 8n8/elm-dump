@@ -1,0 +1,19 @@
+module IO {
+
+  intrinsic type IO[a]
+
+  intrinsic pure : a -> IO[a]
+  intrinsic bind : IO[a] -> (a -> IO[b]) -> IO[b]
+
+  intrinsic println : a -> IO[()]
+  intrinsic inspect : a -> IO[()]
+
+  intrinsic toString        : a -> String
+  intrinsic toInspectString : a -> String
+
+  intrinsic ask : String -> IO[String]
+
+  intrinsic readFile  : String -> IO[Maybe[String]]
+  intrinsic writeFile : {filename: String, content: String} -> IO[()]
+  
+}

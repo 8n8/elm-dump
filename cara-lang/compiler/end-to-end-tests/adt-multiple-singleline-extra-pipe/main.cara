@@ -1,0 +1,5 @@
+type Foo = | Bar | Baz
+
+x = Baz
+
+IO.println!(x)

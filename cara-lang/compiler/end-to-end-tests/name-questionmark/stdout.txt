@@ -1,0 +1,7 @@
+1
+True
+False
+Fizz?
+Buzz?(123)
+False
+True

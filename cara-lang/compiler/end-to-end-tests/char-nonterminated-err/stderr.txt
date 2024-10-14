@@ -1,0 +1,10 @@
+E0017: Unescaped newline in a character
+
+The character contains an unescaped newline. Escape the newline with `\n`:
+
+  '\n'
+
+main.cara:1:5
+━━┓
+1 ┃ x = '
+  ┃     ^

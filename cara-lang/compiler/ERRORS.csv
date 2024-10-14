@@ -1,0 +1,38 @@
+code,description
+E0001,Unknown variable
+E0002,List contains values of different types
+E0003,ADT constructor parameters with same type are missing a name
+E0004,Unknown type
+E0005,Function used with too few arguments
+E0006,Record created with duplicate fields
+E0007,Trying to access a missing record field
+E0008,Function used with too many arguments
+E0009,Unfinished block comment
+E0010,Non-exhaustive anonymous function argument
+E0011,Unused expression
+E0012,Unescaped newline in a string
+E0013,Assignment of expression to underscore
+E0014,Unexpected escaped character in a string
+E0015,Shebang comment is not first
+E0016,Character contains multiple visible characters
+E0017,Unescaped newline in a character
+E0018,Unescaped tab in a character
+E0019,Empty character
+E0020,Anonymous function shorthand with mixed holes
+E0021,If expression without an else branch
+E0022,Trying to access a record field from a non-record
+E0023,Trying to access a missing tuple element
+E0024,Hexadecimal integer started with 0X
+E0025,If expression with a non-bool condition
+E0026,Integer literal is too large for the declared type
+E0027,Bang used outside effect block
+E0028,Unexpected escaped character in a character
+E0029,Unexpected escaped character in a multi-line string
+E0030,Unexpected leading pipe in single-line type declaration
+E0031,Function has multiple arguments of the same name
+E0032,Block expression with no return expression
+E0033,Non-terminated character
+E0034,Non-terminated string
+E0035,Non-terminated multi-line string
+E0036,Main is not a function
+E0037,Multiple spreads in a list pattern

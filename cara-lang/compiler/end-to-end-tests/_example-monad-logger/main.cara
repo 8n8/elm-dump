@@ -1,0 +1,42 @@
+///////////////////////
+// Logger definition //
+
+module Logger {
+
+  opaque type Logger[log,a] = Logger(List[log],a)
+
+  pure : a -> Logger[log,a]
+  pure(a) = Logger([],a)
+
+  bind : Logger[log,a] -> (a -> Logger[log,b]) -> Logger[log,b]
+  bind(Logger(aLog,a),fn) = {
+    (bLog,b) = fn(a)
+    log = aLog ++ bLog
+    Logger(aLog,b)
+  }
+
+  log : log -> Logger[log,()]
+  log(x) = Logger([x],())
+
+  run : Logger[log,a] -> (List[log],a)
+  run(Logger(log,a)) = (log,a)
+
+}
+
+////////////////////
+// Logger example //
+
+loggerExample : Logger[List[String], Int]
+loggerExample = Logger {
+  Logger.log!("Hello")
+  sum = List.sum(1..5)
+  Logger.log!("The sum is $sum")
+  Logger.log!("Done")
+  sum
+}
+
+loggerExampleRan : (List[String], Int)
+loggerExampleRan =
+  Logger.run(loggerExample)
+
+IO.println!(loggerExampleRan)

@@ -1,0 +1,15 @@
+E0013: Assignment of expression to underscore
+
+This type of assignment is not allowed. Either remove the expression or bind it
+to a name:
+
+  x = 123
+
+Note: Since Cara is pure, the content of the expression (if not using a bang
+pattern `!`) is guaranteed to not influence the rest of the program in any way
+and thus is considered dead code.
+
+main.cara:1:1
+━━┓
+1 ┃ _ = 123
+  ┃ ^

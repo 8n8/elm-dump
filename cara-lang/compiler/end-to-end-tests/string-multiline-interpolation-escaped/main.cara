@@ -1,0 +1,2 @@
+x = `This \${abc} is an escaped interpolation`
+IO.println!(x)

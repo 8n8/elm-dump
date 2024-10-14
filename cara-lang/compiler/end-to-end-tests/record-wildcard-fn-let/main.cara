@@ -1,0 +1,10 @@
+f(rec) = IO {
+  {..} = rec
+  IO.println!(a)
+  IO.println!(b)
+}
+
+main() = IO {
+  x = {a: 1, b: "Hello"}
+  f!(x)
+}

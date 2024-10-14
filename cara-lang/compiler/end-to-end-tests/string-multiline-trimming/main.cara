@@ -1,0 +1,65 @@
+// Similar to how Swift does things:
+// https://docs.swift.org/swift-book/documentation/the-swift-programming-language/stringsandcharacters/
+// https://docs.swift.org/swift-book/images/multilineStringWhitespace@2x.png
+
+nl = IO.println("----------------")
+
+IO.println!(`abcdef`)
+
+nl!
+
+IO.println!(`
+abcdef`)
+
+nl!
+
+IO.println!(`abcdef
+`)
+
+nl!
+
+IO.println!(`
+abcdef
+`)
+
+nl!
+
+IO.println!(`
+
+abcdef
+`)
+
+nl!
+
+IO.println!(`
+abcdef
+
+`)
+
+nl!
+
+IO.println!(`
+
+abcdef
+
+`)
+
+nl!
+
+IO.println!(`
+             Hello there
+             World
+               Cruel
+                 World
+             `)
+
+nl!
+
+IO.println!(`
+             Hello there
+             World
+               Cruel
+                 World
+            `)
+
+nl!

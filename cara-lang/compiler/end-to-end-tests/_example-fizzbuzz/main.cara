@@ -1,0 +1,10 @@
+fizzbuzz(n) =
+  if n % 15 == 0 then "FizzBuzz"
+  else if n % 3 == 0 then "Fizz"
+  else if n % 5 == 0 then "Buzz"
+  else "${n}"
+
+1..20
+  |> List.map(fizzbuzz)
+  |> String.join(", ")
+  |> IO.println!

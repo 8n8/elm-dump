@@ -1,0 +1,237 @@
+module List {
+
+  opaque type List[a] = 
+    | Empty
+    | Cons(a,List[a])
+
+  /* TODO 
+  extend module Gen {
+
+    list : Gen[a] -> Gen[List[a]]
+    list(itemGen) = {
+
+      go : List[a] -> Gen[List[a]]
+      go(acc) = Gen {
+        nextPlease = Gen.weightedBool!(0.6)
+        next =
+          if nextPlease then Gen {
+            newItem = itemGen!
+            go!(acc ++ newItem)
+          } 
+          else Gen { acc } 
+        next!
+      }
+
+      go([])
+
+    }
+
+  }
+  */
+
+  singleton : a -> List[a]
+  singleton(a) = [a]
+
+  test: singleton(1) == [1]
+  test: singleton(2) == [2]
+
+  pure : a -> List[a]
+  pure(a) = singleton(a)
+
+  map : (a -> b) -> List[a] -> List[b]
+  map(f,xs) = {
+
+    go : List[a] -> List[b] -> List[b]
+    go([],acc) = acc
+    go([x,...xs],acc) = go(xs,acc++f(x))
+
+    go(xs,[])
+
+  }
+
+  test: map(#(_+1),[1,2,3]) == [2,3,4]
+  test: map(#(_+1),[]) == []
+  test "map: keeps length" with List[Int]:
+    \xs -> length(map(#(_+1),xs)) == length(xs)
+
+  sum : List[Int] -> Int
+  sum(xs) = {
+
+    go : List[Int] -> Int -> Int
+    go([],acc) = acc
+    go([x,...xs],acc) = sum(xs,acc+x)
+
+    go(xs,0)
+
+  }
+
+  test: sum([]) == 0
+  test: sum([1,2,3]) == 6
+  test "sum: known sum" with Gen.list(Gen.const(1)):
+    \ones -> sum(ones) == length(ones)
+
+  concat : List[List[a]] -> List[a]
+  concat(lists) = {
+
+    go : List[List[a]] -> List[a] -> List[a]
+    go([],acc) = acc
+    go([list,...lists],acc) = concat(lists, acc ++ list)
+
+    go(lists,[])
+
+  }
+
+  test: concat([]) == []
+  test: concat([[],[]]) == []
+  test: concat([[1]]) == [1]
+  test: concat([["x"]]) == ["x"]
+  test: concat([[[1]]]) == [[1]]
+  test: concat([[1,2],[3],[],[4,5,6]]) == [1,2,3,4,5,6]
+  test "concat: keeps length" with List[List[Int]]:
+    \lists -> length(concat(lists)) == sum(map(length,lists))
+
+  repeat : Int -> a -> List[a]
+  repeat(n,x) = {
+
+    // TODO what about the 5*[x] built-in operator?
+    // Can we depend on it here?
+    // Or can we make _it_ depend on this function?
+    // Or can we remove it from the compiler and put it into the stdlib?
+
+    go : Int -> List[a] -> List[a]
+    go(0,acc) = acc
+    go(n,acc) = go(n-1,x++acc)
+
+    if n <= 0 then []
+    else go(n,[])
+  }
+
+  test: repeat(0,()) == []
+  test: repeat(3,()) == [(),(),()]
+  test: repeat(2,"a") == ["a","a"]
+  test: repeat(1,1) == [1]
+  test "repeat(1) = singleton" with Int:
+    \x -> repeat(1,x) == singleton(x)
+
+  concatMap : (a -> List[b]) -> List[a] -> List[b]
+  concatMap(fn,list) = concat(map(fn,list))
+
+  test: concatMap(\_ -> [1],[]) == []
+  test: concatMap(\_ -> [1],["x"]) == [1]
+  test: concatMap(\_ -> [1],["x","y"]) == [1,1]
+  test: concatMap(\_ -> [1,2],["x","y"]) == [1,2,1,2]
+  test: concatMap(\x -> repeat(2,x),["x","y"]) == ["x","x","y","y"]
+  test "bind(pure) = identity" with List[Int]:
+    \xs -> concatMap(singleton,xs) == xs
+
+  bind : (a -> List[b]) -> List[a] -> List[b]
+  bind = concatMap
+
+  flatMap : (a -> List[b]) -> List[a] -> List[b]
+  flatMap = concatMap
+
+  andThen : List[a] -> (a -> List[b]) -> List[b]
+  andThen(list,fn) = bind(fn,list)
+
+  empty : List[a]
+  empty = Empty
+
+  test: [] == empty
+  test: [1] != empty
+  test: [[]] != empty
+
+  cons : a -> List[a] -> List[a]
+  cons(a,as) = Cons(a,as)
+
+  test: [1]   == cons(1,[])
+  test: [1,2] == cons(1,cons(2,[]))
+
+  // TODO first instead of head?
+  head : List[a] -> Maybe[a]
+  head([]) = Nothing
+  head([x,...]) = Just(x)
+
+  test: head([]) == Nothing
+  test: head([1]) == Just(1)
+
+  // TODO butfirst or rest instead of tail?
+  tail : List[a] -> Maybe[List[a]]
+  tail([]) = Nothing
+  tail([_,...xs]) = Just(xs)
+
+  test: tail([]) == Nothing
+  test: tail([1]) == Just([])
+  test: tail([1,2,3]) == Just([2,3])
+
+  // TODO better name?
+  uncons : List[a] -> Maybe[(a,List[a])]
+  uncons([]) = Nothing
+  uncons([x,...xs]) = Just((x,xs))
+
+  test: uncons([]) == Nothing
+  test: uncons([1]) == Just((1,[]))
+  test: uncons([1,2,3]) == Just((1,[2,3]))
+
+  empty? : List[a] -> Bool
+  empty?(Empty) = True
+  empty?(_)     = False
+
+  test: empty?(empty)
+  test "cons is not empty" with (Int,List[Int]):
+    \x,xs -> !empty?(cons(x,xs))
+
+  length : List[a] -> Int
+  length(xs) = {
+
+    go : List[a] -> Int -> Int
+    go([],n) = n
+    go([x,...xs],n) = go(xs,n+1)
+
+    go(xs,0)
+
+  }
+
+  test: length([]) == 0
+  test: length([1]) == 1
+  test: length([1,2,3]) == 3
+  test "length(x++xs)" with (Int,List[Int]):
+    \x,xs -> length(x++xs) == length(xs) + 1
+  test "length(xs++x)" with (Int,List[Int]):
+    \x,xs -> length(xs++x) == length(xs) + 1
+
+  // TODO take
+  // TODO drop
+  // TODO reverse
+  // TODO filter
+  // TODO reject
+  // TODO filterMap
+  // TODO nth
+  // TODO foldl
+  // TODO foldr
+  // TODO scanl
+  // TODO scanr
+  // TODO append
+  // TODO intersperse
+  // TODO interleave
+  // TODO iterate
+  // TODO takeWhile
+  // TODO dropWhile
+  // TODO unique
+  // TODO andMap
+  // TODO product
+  // TODO map2
+  // TODO map3
+  // TODO range
+  // TODO indexedMap
+  // TODO unfold (a -> (b,Maybe[a])) -> a -> List[b]
+  // TODO minimum
+  // TODO maximum
+  // TODO last
+
+  // TODO contains?
+  // TODO all?
+  // TODO any?
+
+  // TODO check list-extra
+
+}
