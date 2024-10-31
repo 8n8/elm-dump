@@ -12,9 +12,34 @@ print(f'average path size: {round(average_path_length)} B')
 print(f"total path size: {sum(len(path.encode('utf-8')) for path in paths)} B")
 
 data = ""
+sizes = []
 for path in paths:
     with (open(path, "r")) as file:
-        data += file.read()
+        contents = file.read()
+        sizes.append(len(contents))
+        data += contents
+
+size_frequencies = {}
+underXk = 0
+for size in sizes:
+    if size < 15000:
+        underXk += size
+    nearest_kb = size // 1000
+    if nearest_kb in size_frequencies:
+        size_frequencies[nearest_kb] += 1
+        continue
+    size_frequencies[nearest_kb] = 1
+
+print("proportion of data in files under 15KB: ", underXk/len(data))
+
+#for i in range(100):
+#    count = 0
+#    if i in size_frequencies:
+#        count = size_frequencies[i]
+#    result = f'{str(i): <3} KB'
+#    result += "|"
+#    result += count * '#'
+#    print(result)
 
 print(f"total Elm data size: {len(data.encode('utf-8'))} B")
 
